@@ -5,17 +5,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.ivanov.service_back.dto.ExcelParseAndUploadResponse;
+import ru.ivanov.service_back.model.FlightData;
+import ru.ivanov.service_back.repositoriy.ExcelDataRepository;
 import ru.ivanov.service_back.service.ExcelProcessingService;
 import ru.ivanov.service_back.service.ProcessResult;
+
+import java.util.List;
 
 @RestController
 public class ExcelController {
 
     private final ExcelProcessingService excelProcessingService;
+    private final ExcelDataRepository repository;
 
     @Autowired
-    public ExcelController(ExcelProcessingService excelProcessingService) {
+    public ExcelController(ExcelProcessingService excelProcessingService, ExcelDataRepository repository) {
         this.excelProcessingService = excelProcessingService;
+        this.repository = repository;
     }
 
     @PostMapping("/upload-and-parse")
@@ -45,6 +51,12 @@ public class ExcelController {
                     .body("Error processing file: " + e.getMessage());
         }
     }
+
+    @GetMapping("/all")
+    public List<FlightData> getAllFlights() {
+        return repository.findAll();
+    }
+
 
     private boolean isNotExcel(MultipartFile file){
         return !file.getOriginalFilename().endsWith(".xlsx");

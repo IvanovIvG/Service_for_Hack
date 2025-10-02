@@ -1,6 +1,6 @@
 CREATE TABLE flights
 (
-    flight_id       SERIAL PRIMARY KEY,
+    flight_id       BIGSERIAL  PRIMARY KEY,
     registration_id bigint not null,
     date            DATE   NOT NULL,
     time_start      TIME,

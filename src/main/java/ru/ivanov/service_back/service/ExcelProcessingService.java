@@ -6,7 +6,9 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.ivanov.service_back.model.FlightData;
 import ru.ivanov.service_back.repositoriy.ExcelDataRepository;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -37,7 +39,7 @@ public class ExcelProcessingService {
     }
 
 
-    public ProcessResult parseAndSave(MultipartFile file){
+    public ProcessResult parseAndSave(MultipartFile file) {
         try {
             storeOriginalFile(file);
             parseWithPython();
@@ -61,12 +63,13 @@ public class ExcelProcessingService {
     private void parseWithPython() {
         try {
             ProcessBuilder processBuilder = new ProcessBuilder(
-                    "py",
+                    "python3",
                     pythonScriptPath
             );
 
             processBuilder.redirectErrorStream(true);
             Process process = processBuilder.start();
+
             boolean finished = process.waitFor(5, TimeUnit.MINUTES);
 
             if (!finished) {
@@ -102,7 +105,7 @@ public class ExcelProcessingService {
 
     private void deleteFlightsTable() {
         try {
-            if(Files.exists(flightsPath)) {
+            if (Files.exists(flightsPath)) {
                 Files.delete(flightsPath);
             }
         } catch (IOException e) {
@@ -112,7 +115,7 @@ public class ExcelProcessingService {
 
     private void deleteFlightsParsedTable() {
         try {
-            if(Files.exists(flightsParsedPath)) {
+            if (Files.exists(flightsParsedPath)) {
                 Files.delete(flightsParsedPath);
             }
         } catch (IOException e) {
