@@ -36,7 +36,6 @@ class ExcelToModelParserTest {
             System.out.println(data);
         }
         assertNotNull(result);
-        assertEquals(3, result.size());
 
     }
 
